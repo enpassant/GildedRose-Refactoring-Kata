@@ -8,6 +8,7 @@ class GildedRose(val items: List[Item]) {
       updateAged orElse
       updateBackstage orElse
       updateSulfuras orElse
+      updateConjured orElse
       updateNormal
     }
   }
@@ -27,6 +28,12 @@ class GildedRose(val items: List[Item]) {
 
   private val updateSulfuras: PartialFunction[Item, Item] = {
     case item @ Item(TYPE_SULFURAS, sellIn, quality) => item
+  }
+
+  private val updateConjured: PartialFunction[Item, Item] = {
+    case item @ Item(TYPE_CONJURED, sellIn, quality) =>
+      val amount = if (sellIn < 1) 4 else 2
+      updateItem(item, sellIn - 1, decrease(quality, amount))
   }
 
   private val updateNormal: PartialFunction[Item, Item] = {
@@ -55,5 +62,6 @@ object GildedRose {
   val TYPE_AGED = "Aged Brie"
   val TYPE_BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert"
   val TYPE_SULFURAS = "Sulfuras, Hand of Ragnaros"
+  val TYPE_CONJURED = "Conjured"
 }
 

@@ -129,39 +129,39 @@ class GildedRoseTest  extends FlatSpec with Matchers {
     items(0).quality should equal (0)
   }
 
-  //"Conjured items" should "decrease quality and sellIn" in {
-    //val itemsOrig = List[Item](new Item("Conjured", 5, 10))
-    //val app = new GildedRose(itemsOrig)
-    //val items = app.updateQuality()
-    //items(0).name should equal ("Conjured")
-    //items(0).sellIn should equal (4)
-    //items(0).quality should equal (8)
-  //}
+  "Conjured items" should "decrease quality and sellIn" in {
+    val itemsOrig = List[Item](new Item("Conjured", 5, 10))
+    val app = new GildedRose(itemsOrig)
+    val items = app.updateQuality()
+    items(0).name should equal ("Conjured")
+    items(0).sellIn should equal (4)
+    items(0).quality should equal (8)
+  }
 
-  //it should "the Quality of an item is never negative" in {
-    //val itemsOrig = List[Item](new Item("Conjured", 5, 0))
-    //val app = new GildedRose(itemsOrig)
-    //val items = app.updateQuality()
-    //items(0).name should equal ("Conjured")
-    //items(0).sellIn should equal (4)
-    //items(0).quality should equal (0)
-  //}
+  it should "the Quality of an item is never negative" in {
+    val itemsOrig = List[Item](new Item("Conjured", 5, 0))
+    val app = new GildedRose(itemsOrig)
+    val items = app.updateQuality()
+    items(0).name should equal ("Conjured")
+    items(0).sellIn should equal (4)
+    items(0).quality should equal (0)
+  }
 
-  //it should "once the sell by date has passed, Quality degrades twice as fast" in {
-    //val itemsOrig = List[Item](new Item("Conjured", 0, 10))
-    //val app = new GildedRose(itemsOrig)
-    //val items = app.updateQuality()
-    //items(0).name should equal ("Conjured")
-    //items(0).sellIn should equal (-1)
-    //items(0).quality should equal (6)
-  //}
+  it should "once the sell by date has passed, Quality degrades twice as fast" in {
+    val itemsOrig = List[Item](new Item("Conjured", 0, 10))
+    val app = new GildedRose(itemsOrig)
+    val items = app.updateQuality()
+    items(0).name should equal ("Conjured")
+    items(0).sellIn should equal (-1)
+    items(0).quality should equal (6)
+  }
 
-  //it should "once the sell by date has passed, Quality degrades twice as fast, never negative" in {
-    //val itemsOrig = List[Item](new Item("Conjured", 0, 3))
-    //val app = new GildedRose(itemsOrig)
-    //val items = app.updateQuality()
-    //items(0).name should equal ("Conjured")
-    //items(0).sellIn should equal (-1)
-    //items(0).quality should equal (0)
-  //}
+  it should "once the sell by date has passed, Quality degrades twice as fast, never negative" in {
+    val itemsOrig = List[Item](new Item("Conjured", 0, 3))
+    val app = new GildedRose(itemsOrig)
+    val items = app.updateQuality()
+    items(0).name should equal ("Conjured")
+    items(0).sellIn should equal (-1)
+    items(0).quality should equal (0)
+  }
 }
