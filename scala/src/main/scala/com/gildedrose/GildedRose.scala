@@ -1,58 +1,59 @@
 package com.gildedrose
 
-class GildedRose(val items: Array[Item]) {
+class GildedRose(val items: List[Item]) {
+  import GildedRose._
 
-
-  def updateQuality() {
-    for (i <- 0 until items.length) {
-      if (!items(i).name.equals("Aged Brie")
-        && !items(i).name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-        if (items(i).quality > 0) {
-          if (!items(i).name.equals("Sulfuras, Hand of Ragnaros")) {
-            items(i).quality = items(i).quality - 1
-          }
-        }
-      } else {
-        if (items(i).quality < 50) {
-          items(i).quality = items(i).quality + 1
-
-          if (items(i).name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-            if (items(i).sellIn < 11) {
-              if (items(i).quality < 50) {
-                items(i).quality = items(i).quality + 1
-              }
-            }
-
-            if (items(i).sellIn < 6) {
-              if (items(i).quality < 50) {
-                items(i).quality = items(i).quality + 1
-              }
-            }
-          }
-        }
-      }
-
-      if (!items(i).name.equals("Sulfuras, Hand of Ragnaros")) {
-        items(i).sellIn = items(i).sellIn - 1
-      }
-
-      if (items(i).sellIn < 0) {
-        if (!items(i).name.equals("Aged Brie")) {
-          if (!items(i).name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-            if (items(i).quality > 0) {
-              if (!items(i).name.equals("Sulfuras, Hand of Ragnaros")) {
-                items(i).quality = items(i).quality - 1
-              }
-            }
-          } else {
-            items(i).quality = items(i).quality - items(i).quality
-          }
-        } else {
-          if (items(i).quality < 50) {
-            items(i).quality = items(i).quality + 1
-          }
-        }
-      }
+  def updateQuality(): List[Item] = {
+    items map {
+      updateAged orElse
+      updateBackstage orElse
+      updateSulfuras orElse
+      updateNormal
     }
   }
+
+  private val updateAged: PartialFunction[Item, Item] = {
+    case item @ Item(TYPE_AGED, sellIn, quality) =>
+      val amount = if (sellIn < 1) 2 else 1
+      updateItem(item, sellIn - 1, increase(quality, amount))
+  }
+
+  private val updateBackstage: PartialFunction[Item, Item] = {
+    case item @ Item(TYPE_BACKSTAGE, sellIn, quality) =>
+      val limits = Map(1 -> -quality, 6 -> 3, 11 -> 2)
+      val amount = limits.find(e => sellIn < e._1) map (_._2) getOrElse 1
+      updateItem(item, sellIn - 1, increase(quality, amount))
+  }
+
+  private val updateSulfuras: PartialFunction[Item, Item] = {
+    case item @ Item(TYPE_SULFURAS, sellIn, quality) => item
+  }
+
+  private val updateNormal: PartialFunction[Item, Item] = {
+    case item @ Item(_, sellIn, quality) =>
+      val amount = if (sellIn < 1) 2 else 1
+      updateItem(item, sellIn - 1, decrease(quality, amount))
+  }
+
+  private def updateItem(item: Item, sellIn: Int, quality: Int) = {
+    item.copy(sellIn = sellIn, quality = quality)
+  }
+
+  private def decrease(value: Int, amount: Int) = {
+    if (value > amount) value - amount else 0
+  }
+
+  private def increaseWithLimit(limit: Int)(value: Int, amount: Int) = {
+    val newQuality = value + amount
+    if (newQuality <= limit) newQuality else limit
+  }
+
+  private val increase = increaseWithLimit(50) _
 }
+
+object GildedRose {
+  val TYPE_AGED = "Aged Brie"
+  val TYPE_BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert"
+  val TYPE_SULFURAS = "Sulfuras, Hand of Ragnaros"
+}
+
