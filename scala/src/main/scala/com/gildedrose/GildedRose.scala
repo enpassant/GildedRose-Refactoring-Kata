@@ -21,7 +21,7 @@ class GildedRose(val items: List[Item]) {
 
   private val updateBackstage: PartialFunction[Item, Item] = {
     case item @ Item(TYPE_BACKSTAGE, sellIn, quality) =>
-      val limits = Map(1 -> -quality, 6 -> 3, 11 -> 2)
+      val limits = List(1 -> -quality, 6 -> 3, 11 -> 2)
       val amount = limits.find(e => sellIn < e._1) map (_._2) getOrElse 1
       updateItem(item, sellIn - 1, increase(quality, amount))
   }
