@@ -1,9 +1,7 @@
 package com.gildedrose
 
-class GildedRose(val items: List[Item]) {
-  import GildedRose._
-
-  def updateQuality(): List[Item] = {
+object GildedRose {
+  def updateQuality(items: List[Item]): List[Item] = {
     items map {
       updateAged orElse
       updateBackstage orElse
@@ -56,12 +54,9 @@ class GildedRose(val items: List[Item]) {
   }
 
   private val increase = increaseWithLimit(50) _
-}
 
-object GildedRose {
   val TYPE_AGED = "Aged Brie"
   val TYPE_BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert"
   val TYPE_SULFURAS = "Sulfuras, Hand of Ragnaros"
   val TYPE_CONJURED = "Conjured"
 }
-
